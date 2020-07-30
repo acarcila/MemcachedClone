@@ -10,7 +10,7 @@ class Cache
   # adds an item with the specified key or replace the existent one
   def get(key)
     if @hash[key]
-      @hash[key].value
+      @hash[key]
     else
       false
     end
@@ -57,6 +57,18 @@ class Cache
     else
       false
     end
+  end
+
+  def startKeyManaging()
+    thread = Thread.new do
+      while true
+        currentTime = Time.now.getutc.to_i
+        hash.delete_if { |key, item| currentTime > item.diesAt }
+        sleep 1
+      end
+    end
+
+    thread.join
   end
 
   def to_s()
