@@ -7,7 +7,7 @@ class Cache
     @hash = Hash.new
   end
 
-  # adds an item with the specified key or replace the existent one
+  # gets the item with the specified key
   def get(key)
     if @hash[key]
       @hash[key]
