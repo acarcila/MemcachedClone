@@ -41,7 +41,7 @@ class Cache
     end
   end
 
-  #
+  # concats a string after the current value of the item
   def append(key, value)
     if @hash[key]
       @hash[key].append(item)
@@ -50,7 +50,7 @@ class Cache
     end
   end
 
-  #
+  # concats a string before the current value of the item
   def prepend(key, value)
     if @hash[key]
       @hash[key].prepend(item)
@@ -59,11 +59,11 @@ class Cache
     end
   end
 
+  # starts a Thread that deletes the expired keys every second
   def startKeyManaging()
     thread = Thread.new do
       while true
-        currentTime = Time.now.getutc.to_i
-        hash.delete_if { |key, item| currentTime > item.diesAt }
+        deleteExpiredKeys(Time.now)
         sleep 1
       end
     end
@@ -73,5 +73,13 @@ class Cache
 
   def to_s()
     @hash
+  end
+
+  private
+
+  # delete the expired keys in the hash at the current time
+  def deleteExpiredKeys(currentTime = Time.now)
+    hash.delete_if { |key, item| currentTime > item.diesAt }
+    puts hash
   end
 end
