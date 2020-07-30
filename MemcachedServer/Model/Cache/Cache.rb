@@ -1,4 +1,4 @@
-require_relative "Item"
+require_relative "../Item/Item"
 
 class Cache
   attr_reader :hash         # getters
