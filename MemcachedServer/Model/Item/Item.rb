@@ -17,7 +17,7 @@ class Item
   end
 
   def diesAt()
-    @ttl + @createdAt.to_i
+    @createdAt + @ttl
   end
 
   def to_s()
