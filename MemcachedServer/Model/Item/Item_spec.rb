@@ -1,4 +1,3 @@
-require "rspec/autorun"
 require_relative "Item"
 
 describe Item do

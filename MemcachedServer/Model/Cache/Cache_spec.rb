@@ -1,8 +1,7 @@
-require "rspec/autorun"
 require_relative "Cache"
 require_relative "../Item/Item"
 
-describe Item do
+RSpec.describe Item do
   it "GET: gets the item with the specified key" do
     cache = Cache.new()
     cache.hash["key"] = Item.new("value", 10)
