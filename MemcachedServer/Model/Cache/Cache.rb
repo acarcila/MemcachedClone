@@ -80,6 +80,5 @@ class Cache
   # delete the expired keys in the hash at the current time
   def deleteExpiredKeys(currentTime = Time.now)
     hash.delete_if { |key, item| currentTime > item.diesAt }
-    puts hash
   end
 end
