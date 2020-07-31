@@ -44,7 +44,7 @@ class Cache
   # concats a string after the current value of the item
   def append(key, value)
     if @hash[key]
-      @hash[key].append(item)
+      @hash[key].append(value)
     else
       false
     end
@@ -53,7 +53,7 @@ class Cache
   # concats a string before the current value of the item
   def prepend(key, value)
     if @hash[key]
-      @hash[key].prepend(item)
+      @hash[key].prepend(value)
     else
       false
     end
