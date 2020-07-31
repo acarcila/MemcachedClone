@@ -59,7 +59,7 @@ class Cache
     end
   end
 
-  # starts a Thread that deletes the expired keys every second
+  # creates a Thread that deletes the expired keys every second
   def startKeyManaging()
     thread = Thread.new do
       while true
@@ -67,8 +67,6 @@ class Cache
         sleep 1
       end
     end
-
-    thread.join
   end
 
   def to_s()
