@@ -1,4 +1,5 @@
 require "socket"
+require_relative "Controller/Util/CommandUtil/CommandUtil"
 require_relative "Model/Item/Item"
 require_relative "Model/Cache/Cache"
 
@@ -17,8 +18,6 @@ server = TCPServer.new 3000
 
 $stdout.sync = true
 
-data = Hash.new
-
 threads = []
 tcpThread = Thread.new do
   loop do
@@ -26,9 +25,10 @@ tcpThread = Thread.new do
       client.puts("conectado")
       until client.eof?
         msg = client.gets
-        data[msg] = msg
-        client.write(data)
-        puts data
+        puts msg
+        hashCommand = CommandUtil.translateCommand(msg)
+
+        puts hashCommand
         # client.close
       end
     end
