@@ -28,6 +28,8 @@ jobs:
       with:
         ruby-version: 2.6
     - name: Install dependencies
-      run: cd MemcachedServer & bundle install
+      run: bundle install
+      working-directory: MemcachedServer
     - name: Run tests
       run: cd MemcachedServer & rspec .
+      working-directory: MemcachedServer
