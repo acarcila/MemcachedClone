@@ -1,9 +1,9 @@
-class CommandUtil
-  def CommandUtil.splitString(command)
+class CommandTranslateUtil
+  def CommandTranslateUtil.splitString(command)
     command.split
   end
 
-  def CommandUtil.getCommand(array)
+  def CommandTranslateUtil.getCommand(array)
     command = array.shift
     hash = Hash.new
     if command =~ /(set|add|replace|append|prepend|cas|(g(e|a)t(s|)))/
@@ -15,7 +15,7 @@ class CommandUtil
     hash
   end
 
-  def CommandUtil.getParams(array)
+  def CommandTranslateUtil.getParams(array)
     hash = Hash.new
 
     whitespace = array.pop
@@ -43,7 +43,7 @@ class CommandUtil
     hash
   end
 
-  def CommandUtil.getCasParams(array)
+  def CommandTranslateUtil.getCasParams(array)
     hash = Hash.new
 
     casToken = array.pop
@@ -51,7 +51,7 @@ class CommandUtil
     hash
   end
 
-  def CommandUtil.getKeys(array)
+  def CommandTranslateUtil.getKeys(array)
     hash = Hash.new
 
     if array.length == 1
@@ -65,7 +65,7 @@ class CommandUtil
     hash
   end
 
-  def CommandUtil.getGetsKeys(array)
+  def CommandTranslateUtil.getGetsKeys(array)
     hash = Hash.new
 
     unless array.empty?
@@ -77,7 +77,7 @@ class CommandUtil
     hash
   end
 
-  def CommandUtil.translateCommand(command)
+  def CommandTranslateUtil.translateCommand(command)
     array = splitString(command)
 
     hash = getCommand(array)

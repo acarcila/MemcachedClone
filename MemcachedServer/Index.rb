@@ -1,5 +1,5 @@
 require "socket"
-require_relative "Controller/Util/CommandUtil/CommandUtil"
+require_relative "Controller/Util/CommandTranslateUtil/CommandTranslateUtil"
 require_relative "Model/Item/Item"
 require_relative "Model/Cache/Cache"
 
@@ -26,7 +26,7 @@ tcpThread = Thread.new do
       until client.eof?
         msg = client.gets
         puts msg
-        hashCommand = CommandUtil.translateCommand(msg)
+        hashCommand = CommandTranslateUtil.translateCommand(msg)
 
         puts hashCommand
         # client.close
