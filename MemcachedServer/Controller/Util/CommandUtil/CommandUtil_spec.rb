@@ -63,6 +63,7 @@ RSpec.describe CommandUtil do
     expect(command["command"]).to eq("get")
     expect(command["keys"][0]).to eq("key")
 
+    # multiple key
     commandString = "get key1 key2 key3"
     command = CommandUtil.translateCommand(commandString)
 
@@ -77,6 +78,7 @@ RSpec.describe CommandUtil do
     expect(command["command"]).to eq("gets")
     expect(command["keys"][0]).to eq("key")
 
+    # multiple key
     commandString = "gets key1 key2 key3"
     command = CommandUtil.translateCommand(commandString)
 
