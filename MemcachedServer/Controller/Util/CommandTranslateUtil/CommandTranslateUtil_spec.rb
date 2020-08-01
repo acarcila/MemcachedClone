@@ -1,7 +1,7 @@
 require_relative "CommandTranslateUtil"
 
 RSpec.describe CommandTranslateUtil do
-  it "translates de SET command" do
+  it "translates the SET command" do
     commandString = "set key 0 3600 2"
     command = CommandTranslateUtil.translateCommand(commandString)
 
@@ -12,7 +12,7 @@ RSpec.describe CommandTranslateUtil do
     expect(command["whitespace"]).to eq(2)
   end
 
-  it "translates de Add command" do
+  it "translates the Add command" do
     commandString = "add key 0 3600 2"
     command = CommandTranslateUtil.translateCommand(commandString)
 
@@ -23,7 +23,7 @@ RSpec.describe CommandTranslateUtil do
     expect(command["whitespace"]).to eq(2)
   end
 
-  it "translates de Replace command" do
+  it "translates the Replace command" do
     commandString = "replace key 0 3600 2"
     command = CommandTranslateUtil.translateCommand(commandString)
 
@@ -34,7 +34,7 @@ RSpec.describe CommandTranslateUtil do
     expect(command["whitespace"]).to eq(2)
   end
 
-  it "translates de Append command" do
+  it "translates the Append command" do
     commandString = "append key 0 3600 2"
     command = CommandTranslateUtil.translateCommand(commandString)
 
@@ -45,7 +45,7 @@ RSpec.describe CommandTranslateUtil do
     expect(command["whitespace"]).to eq(2)
   end
 
-  it "translates de Prepend command" do
+  it "translates the Prepend command" do
     commandString = "prepend key 0 3600 2"
     command = CommandTranslateUtil.translateCommand(commandString)
 
@@ -56,7 +56,7 @@ RSpec.describe CommandTranslateUtil do
     expect(command["whitespace"]).to eq(2)
   end
 
-  it "translates de Get command" do
+  it "translates the Get command" do
     commandString = "get key"
     command = CommandTranslateUtil.translateCommand(commandString)
 
@@ -71,7 +71,7 @@ RSpec.describe CommandTranslateUtil do
     expect(command["keys"]).to eq(["key1", "key2", "key3"])
   end
 
-  it "translates de Gets command" do
+  it "translates the Gets command" do
     commandString = "gets key"
     command = CommandTranslateUtil.translateCommand(commandString)
 
