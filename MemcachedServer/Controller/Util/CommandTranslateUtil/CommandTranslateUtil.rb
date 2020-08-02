@@ -82,8 +82,6 @@ class CommandTranslateUtil
       if map["command"] =~ /set|add|replace|append|prepend|cas/
         proc.call
       elsif procElse
-        puts procElse
-        puts "else"
         procElse.call
       end
     else
