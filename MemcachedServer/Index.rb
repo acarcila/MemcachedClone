@@ -5,15 +5,12 @@ require_relative "Model/Item/Item"
 require_relative "Model/Cache/Cache"
 
 cache = Cache.new
-puts cache.set("prueba", 12)
+puts cache.set(key: "prueba", value: 12, ttl: 10, whitespace: 2)
 puts cache.get("prueba")
-puts cache.add("prueba2", 13, 10)
-puts cache.add("prueba2", 15, 10)
+puts cache.add(key: "prueba2", value: 124, ttl: 5, whitespace: 3)
+puts cache.add(key: "prueba2", value: 15, ttl: 7, whitespace: 2)
 puts cache.get("prueba2")
-puts cache.replace("prueba2", 15)
-puts cache.set("prueba2", 18)
-puts cache.get("prueba2")
-puts cache.to_s
+puts cache.replace(key: "prueba2", value: 1004, ttl: 20, whitespace: 4)
 
 server = TCPServer.new 3000
 

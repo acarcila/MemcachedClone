@@ -1,18 +1,31 @@
 class Item
-  attr_reader :value, :ttl, :createdAt     # getters
-  attr_writer :value, :ttl, :createdAt     # setters
+  attr_reader :value, :ttl, :createdAt, :casToken, :whitespace, :flags     # getters
+  attr_writer :value, :ttl, :createdAt, :casToken, :whitespace, :flags     # setters
 
-  def initialize(value, ttl = 0)
+  def initialize(value: nil, casToken: @casToken, ttl: 0, whitespace: 0, flags: 0)
     @value = value
     @ttl = ttl
+    @casToken = casToken
+    @whitespace = whitespace
+    @flags = flags
     @createdAt = Time.now.getutc
   end
 
-  def append(value)
+  def append(value: nil, casToken: @casToken, ttl: nil, whitespace: 0, flags: 0)
+    ttl ||= @ttl
+    @whitespace += whitespace
+    @casToken = casToken
+    @ttl = ttl
+    @flags = flags
     @value = "#{@value}#{value}"
   end
 
-  def prepend(value)
+  def prepend(value: nil, casToken: @casToken, ttl: nil, whitespace: 0, flags: 0)
+    ttl ||= @ttl
+    @whitespace += whitespace
+    @casToken = casToken
+    @ttl = ttl
+    @flags = flags
     @value = "#{value}#{@value}"
   end
 
@@ -21,6 +34,6 @@ class Item
   end
 
   def to_s()
-    "Value: #{@value}, will die in #{@ttl}"
+    "value=#{@value}, ttl=#{ttl}, casToken=#{@casToken}, whitespace=#{@whitespace}, flags=#{@flags}, createdAt=#{@createdAt}"
   end
 end

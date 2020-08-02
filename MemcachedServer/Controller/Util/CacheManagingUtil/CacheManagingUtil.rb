@@ -6,7 +6,7 @@ class CacheManagingUtil
   def CacheManagingUtil.startKeyManaging(cache)
     thread = Thread.new do
       while true
-        cache.deleteExpiredKeys(Time.now)
+        cache.deleteExpiredKeys(currentTime: Time.now)
         puts cache.to_s
         sleep 1
       end

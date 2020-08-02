@@ -1,6 +1,7 @@
 require_relative "../Item/Item"
 
 class Cache
+  @@casTokenCount = 0         #class variable
   attr_reader :memory         # getters
 
   def initialize()
@@ -17,50 +18,50 @@ class Cache
   end
 
   # adds an item with the specified key or replace the existent one
-  def set(key, value, ttl = nil)
+  def set(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     ttl ||= @memory[key].ttl if @memory[key]
-    @memory[key] = Item.new(value, *ttl)
+    @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
   end
 
   # adds an item with the specified key but fails if the key already exists
-  def add(key, value, *ttl)
+  def add(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     unless @memory[key]
-      @memory[key] = Item.new(value, *ttl)
+      @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
     else
       false
     end
   end
 
   # replace an item with the specified key but fails if the key does not exists
-  def replace(key, value, ttl = nil)
+  def replace(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     ttl ||= @memory[key].ttl
     if @memory[key]
-      @memory[key] = Item.new(value, *ttl)
+      @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
     else
       false
     end
   end
 
   # concats a string after the current value of the item
-  def append(key, value)
+  def append(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     if @memory[key]
-      @memory[key].append(value)
+      @memory[key].append(value: value, casToken: @@casTokenCount += 1, whitespace: whitespace, ttl: ttl, flags: flags)
     else
       false
     end
   end
 
   # concats a string before the current value of the item
-  def prepend(key, value)
+  def prepend(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     if @memory[key]
-      @memory[key].prepend(value)
+      @memory[key].prepend(value: value, casToken: @@casTokenCount += 1, whitespace: whitespace, ttl: ttl, flags: flags)
     else
       false
     end
   end
 
   # delete the expired keys in the memory at a given time
-  def deleteExpiredKeys(currentTime = Time.now)
+  def deleteExpiredKeys(currentTime: Time.now)
     memory.delete_if { |key, item| currentTime > item.diesAt }
   end
 
