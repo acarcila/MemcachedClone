@@ -6,17 +6,10 @@ class CacheManagingUtil
   def CacheManagingUtil.startKeyManaging(cache)
     thread = Thread.new do
       while true
-        deleteExpiredKeys(cache, Time.now)
+        cache.deleteExpiredKeys(Time.now)
         puts cache.to_s
         sleep 1
       end
     end
-  end
-
-  private
-
-  # delete the expired keys in the hash at the current time
-  def CacheManagingUtil.deleteExpiredKeys(cache, currentTime = Time.now)
-    cache.hash.delete_if { |key, item| currentTime > item.diesAt }
   end
 end
