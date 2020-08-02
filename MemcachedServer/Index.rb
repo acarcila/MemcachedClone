@@ -1,5 +1,6 @@
 require "socket"
 require_relative "Controller/Util/CommandTranslateUtil/CommandTranslateUtil"
+require_relative "Controller/Util/CacheManagingUtil/CacheManagingUtil"
 require_relative "Model/Item/Item"
 require_relative "Model/Cache/Cache"
 
@@ -35,7 +36,7 @@ tcpThread = Thread.new do
   end
 end
 
-cacheThread = cache.startKeyManaging
+cacheThread = CacheManagingUtil.startKeyManaging(cache)
 threads = [tcpThread, cacheThread]
 
 threads.each(&:join)
