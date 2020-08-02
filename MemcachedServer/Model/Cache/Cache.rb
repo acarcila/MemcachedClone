@@ -59,24 +59,7 @@ class Cache
     end
   end
 
-  # creates a Thread that deletes the expired keys every second
-  def startKeyManaging()
-    thread = Thread.new do
-      while true
-        deleteExpiredKeys(Time.now)
-        sleep 1
-      end
-    end
-  end
-
   def to_s()
     @hash
-  end
-
-  private
-
-  # delete the expired keys in the hash at the current time
-  def deleteExpiredKeys(currentTime = Time.now)
-    hash.delete_if { |key, item| currentTime > item.diesAt }
   end
 end
