@@ -26,9 +26,9 @@ tcpThread = Thread.new do
       until client.eof?
         msg = client.gets
         puts msg
-        hashCommand = CommandTranslateUtil.translateCommand(msg)
+        mapCommand = CommandTranslateUtil.translateCommand(msg)
 
-        puts hashCommand
+        puts mapCommand
         # client.close
       end
     end
