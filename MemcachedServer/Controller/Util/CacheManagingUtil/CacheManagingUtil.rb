@@ -7,7 +7,6 @@ class CacheManagingUtil
     thread = Thread.new do
       while true
         cache.deleteExpiredKeys(currentTime: Time.now)
-        puts cache.to_s
         sleep 1
       end
     end
