@@ -14,13 +14,20 @@ class CommandExecuteUtil
     response
   end
 
+  def CommandExecuteUtil.errorToResponse(status, error = nil)
+    response = []
+    response << "#{status} #{error}"
+
+    response
+  end
+
   def CommandExecuteUtil.execute(mapCommand, cache, value = nil)
     responseArray = Array.new
     commandResponse = nil
     unless mapCommand["status"]
       if mapCommand["command"] =~ /set|add|replace|append|prepend|cas/
         if mapCommand["whitespace"] != value.size
-          responseArray << "CLIENT_ERROR bad command line format"
+          responseArray << "CLIENT_ERROR bad data chunk"
           return responseArray
         end
         # executes the command by name
@@ -41,7 +48,7 @@ class CommandExecuteUtil
       return responseArray
     end
 
-    responseArray << mapCommand["status"]
+    responseArray += errorToResponse(mapCommand["status"], *mapCommand["error"])
     return responseArray
   end
 end
