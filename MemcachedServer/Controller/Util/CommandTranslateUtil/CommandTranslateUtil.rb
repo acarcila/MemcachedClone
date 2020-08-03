@@ -9,7 +9,7 @@ class CommandTranslateUtil
     if command =~ /(set|add|replace|append|prepend|cas|(g(e|a)t(s|)))/
       map["command"] = command
     else
-      map["output"] = "ERROR"
+      map["status"] = "ERROR"
     end
 
     map
@@ -25,19 +25,19 @@ class CommandTranslateUtil
     if whitespace =~ /\d+/
       map["whitespace"] = whitespace.to_i
     else
-      map["output"] = "ERROR"
+      map["status"] = "ERROR"
     end
 
     if ttl =~ /\d+/
       map["ttl"] = ttl.to_i
     else
-      map["output"] = "ERROR"
+      map["status"] = "ERROR"
     end
 
     if flags =~ /\d+/
       map["flags"] = flags.to_i
     else
-      map["output"] = "ERROR"
+      map["status"] = "ERROR"
     end
 
     map
@@ -57,9 +57,9 @@ class CommandTranslateUtil
     if array.length == 1
       map["keys"] = array
     elsif array.length < 1
-      map["output"] = "ERROR"
+      map["status"] = "ERROR"
     else
-      map["output"] = "CLIENT_ERROR bad command line format"
+      map["error"] = "CLIENT_ERROR bad command line format"
     end
 
     map
@@ -68,17 +68,13 @@ class CommandTranslateUtil
   def CommandTranslateUtil.getGetsKeys(array)
     map = Hash.new
 
-    unless array.empty?
-      map["keys"] = array
-    else
-      map["output"] = "ERROR"
-    end
+    map["keys"] = array
 
     map
   end
 
   def CommandTranslateUtil.ifNotGet(map, proc, procElse = nil)
-    unless map["output"] =~ /ERROR|CLIENT_ERROR bad command line format/
+    unless map["status"] == "ERROR"
       if map["command"] =~ /set|add|replace|append|prepend|cas/
         proc.call
       elsif procElse

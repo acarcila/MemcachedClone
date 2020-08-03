@@ -9,44 +9,35 @@ class CommandExecuteUtil
     if item
       response << "VALUE #{key} #{item.flags} #{item.whitespace}"
       response << "#{item.value}"
-    else
-      response << "ERROR"
     end
+
+    response
   end
 
   def CommandExecuteUtil.execute(mapCommand, cache, value = nil)
     responseArray = Array.new
     commandResponse = nil
-    unless mapCommand["output"]
+    unless mapCommand["status"]
       if mapCommand["command"] =~ /set|add|replace|append|prepend|cas/
-        case mapCommand["command"]
-        when "set"
-          commandResponse = cache.set(key: mapCommand["keys"][0], value: value, ttl: mapCommand["ttl"], whitespace: mapCommand["whitespace"], flags: mapCommand["flags"])
-        when "add"
-          commandResponse = cache.add(key: mapCommand["keys"][0], value: value, ttl: mapCommand["ttl"], whitespace: mapCommand["whitespace"], flags: mapCommand["flags"])
-        when "replace"
-          commandResponse = cache.replace(key: mapCommand["keys"][0], value: value, ttl: mapCommand["ttl"], whitespace: mapCommand["whitespace"], flags: mapCommand["flags"])
-        when "append"
-          commandResponse = cache.append(key: mapCommand["keys"][0], value: value, ttl: mapCommand["ttl"], whitespace: mapCommand["whitespace"], flags: mapCommand["flags"])
-        when "prepend"
-          commandResponse = cache.prepend(key: mapCommand["keys"][0], value: value, ttl: mapCommand["ttl"], whitespace: mapCommand["whitespace"], flags: mapCommand["flags"])
-        else
-          responseArray << "ERROR"
-        end
+        # executes the command by name
+        commandResponse = cache.send(mapCommand["command"], key: mapCommand["keys"][0], value: value, ttl: mapCommand["ttl"], whitespace: mapCommand["whitespace"], flags: mapCommand["flags"])
 
         if commandResponse
           responseArray << "STORED"
         else
-          responseArray << "ERROR"
+          responseArray << "NOT_STORED"
         end
       else
         mapCommand["keys"].each do |key|
+          puts "key"
+          puts key
           commandResponse = cache.get(key)
           responseArray += itemToResponse(key, commandResponse)
         end
+        responseArray << "END"
       end
     else
-      responseArray << mapCommand["output"]
+      responseArray << mapCommand["status"]
     end
 
     return responseArray
