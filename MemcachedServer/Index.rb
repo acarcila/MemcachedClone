@@ -25,7 +25,12 @@ tcpThread = Thread.new do
       until client.eof?
         msg = (client.gets).strip
         mapCommand = CommandTranslateUtil.translateCommand(msg)
-        value = (client.gets).strip unless mapCommand["command"] =~ /g(e|a)t(s|)/ || mapCommand["status"] =~ /ERROR.*/
+        unless mapCommand["command"] =~ /g(e|a)t(s|)/ || mapCommand["status"] =~ /ERROR.*/
+          value = (client.gets).strip
+          until value.size >= mapCommand["whitespace"]
+            value += "\r\n#{((client.gets).strip)}"
+          end
+        end
 
         responseArray = CommandExecuteUtil.execute(mapCommand, cache, value)
         client.puts("#{responseArray.shift}\r\n") until responseArray.empty?
