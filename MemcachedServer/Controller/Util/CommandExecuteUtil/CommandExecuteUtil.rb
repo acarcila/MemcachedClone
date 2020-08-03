@@ -16,7 +16,7 @@ class CommandExecuteUtil
 
   def CommandExecuteUtil.errorToResponse(status, error = nil)
     response = []
-    response << "#{status} #{error}"
+    response << "#{status} #{error}".strip
 
     response
   end
