@@ -86,15 +86,15 @@ RSpec.describe CommandTranslateUtil do
     expect(command["keys"]).to eq(["key1", "key2", "key3"])
   end
 
-  it "outputs ERROR" do
+  it "updates status" do
     commandString = "set 0 3600 2"
     command = CommandTranslateUtil.translateCommand(commandString)
 
-    expect(command["output"]).to eq("ERROR")
+    expect(command["status"]).to eq("ERROR")
 
     commandString = "set key key2 0 3600 2"
     command = CommandTranslateUtil.translateCommand(commandString)
 
-    expect(command["output"]).to eq("CLIENT_ERROR bad command line format")
+    expect(command["status"]).to eq("CLIENT_ERROR")
   end
 end

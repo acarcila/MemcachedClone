@@ -59,7 +59,8 @@ class CommandTranslateUtil
     elsif array.length < 1
       map["status"] = "ERROR"
     else
-      map["error"] = "CLIENT_ERROR bad command line format"
+      map["status"] = "CLIENT_ERROR"
+      map["error"] = "bad command line format"
     end
 
     map
