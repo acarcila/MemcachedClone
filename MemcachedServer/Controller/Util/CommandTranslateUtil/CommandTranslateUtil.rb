@@ -6,7 +6,7 @@ class CommandTranslateUtil
   def CommandTranslateUtil.getCommand(array)
     command = array.shift
     map = Hash.new
-    if command =~ /(set|add|replace|append|prepend|cas|(g(e|a)t(s|)))/
+    if command =~ /(set|add|replace|append|prepend|cas|(g(e|a)t(s|)))\b/
       map["command"] = command
     else
       map["status"] = "ERROR"
@@ -80,7 +80,7 @@ class CommandTranslateUtil
 
   def CommandTranslateUtil.ifNotGet(map, proc, procElse = nil)
     unless map["status"] == "ERROR"
-      if map["command"] =~ /set|add|replace|append|prepend|cas/
+      if map["command"] =~ /set|add|replace|append|prepend|cas\b/
         proc.call
       elsif procElse
         procElse.call
