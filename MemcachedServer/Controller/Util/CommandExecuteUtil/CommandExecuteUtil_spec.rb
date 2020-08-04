@@ -1,5 +1,6 @@
 require_relative "CommandExecuteUtil"
 require_relative "../CommandTranslateUtil/CommandTranslateUtil"
+require_relative "../Constants/ResponseConstants"
 require_relative "../../../Model/Cache/Cache"
 require_relative "../../../Model/Item/Item"
 
@@ -10,7 +11,7 @@ RSpec.describe CommandExecuteUtil do
     mapCommand = CommandTranslateUtil.translateCommand(commandString)
     responseArray = CommandExecuteUtil.execute(mapCommand, cache, "xo")
 
-    expect(responseArray[0]).to eq("STORED")
+    expect(responseArray[0]).to eq(ResponseConstants::STORED)
     expect(cache.get("key").value).to eq("xo")
     expect(cache.get("key").ttl).to eq(3600)
     expect(cache.get("key").flags).to eq(0)
@@ -23,7 +24,7 @@ RSpec.describe CommandExecuteUtil do
     mapCommand = CommandTranslateUtil.translateCommand(commandString)
     responseArray = CommandExecuteUtil.execute(mapCommand, cache, "xo")
 
-    expect(responseArray[0]).to eq("STORED")
+    expect(responseArray[0]).to eq(ResponseConstants::STORED)
     expect(cache.get("key").value).to eq("xo")
     expect(cache.get("key").ttl).to eq(3600)
     expect(cache.get("key").flags).to eq(0)
@@ -37,7 +38,7 @@ RSpec.describe CommandExecuteUtil do
     mapCommand = CommandTranslateUtil.translateCommand(commandString)
     responseArray = CommandExecuteUtil.execute(mapCommand, cache, "xo")
 
-    expect(responseArray[0]).to eq("STORED")
+    expect(responseArray[0]).to eq(ResponseConstants::STORED)
     expect(cache.get("key").value).to eq("xo")
     expect(cache.get("key").ttl).to eq(3600)
     expect(cache.get("key").flags).to eq(0)
@@ -51,7 +52,7 @@ RSpec.describe CommandExecuteUtil do
     mapCommand = CommandTranslateUtil.translateCommand(commandString)
     responseArray = CommandExecuteUtil.execute(mapCommand, cache, "xo")
 
-    expect(responseArray[0]).to eq("STORED")
+    expect(responseArray[0]).to eq(ResponseConstants::STORED)
     expect(cache.get("key").value).to eq("10xo")
     expect(cache.get("key").ttl).to eq(3600)
     expect(cache.get("key").flags).to eq(0)
@@ -65,7 +66,7 @@ RSpec.describe CommandExecuteUtil do
     mapCommand = CommandTranslateUtil.translateCommand(commandString)
     responseArray = CommandExecuteUtil.execute(mapCommand, cache, "xo")
 
-    expect(responseArray[0]).to eq("STORED")
+    expect(responseArray[0]).to eq(ResponseConstants::STORED)
     expect(cache.get("key").value).to eq("xo10")
     expect(cache.get("key").ttl).to eq(3600)
     expect(cache.get("key").flags).to eq(0)
@@ -84,7 +85,7 @@ RSpec.describe CommandExecuteUtil do
     expect(responseArray[1]).to eq("10")
     expect(responseArray[2]).to eq("VALUE key2 0 3")
     expect(responseArray[3]).to eq("200")
-    expect(responseArray[4]).to eq("END")
+    expect(responseArray[4]).to eq(ResponseConstants::END_)
   end
 
   it "executes the GETS command" do
@@ -99,7 +100,7 @@ RSpec.describe CommandExecuteUtil do
     expect(responseArray[1]).to eq("10")
     expect(responseArray[2]).to eq("VALUE key2 0 3 2")
     expect(responseArray[3]).to eq("200")
-    expect(responseArray[4]).to eq("END")
+    expect(responseArray[4]).to eq(ResponseConstants::END_)
   end
 
   it "executes a 'bad data chunk' CLIENT_ERROR" do
@@ -108,7 +109,7 @@ RSpec.describe CommandExecuteUtil do
     mapCommand = CommandTranslateUtil.translateCommand(commandString)
     responseArray = CommandExecuteUtil.execute(mapCommand, cache, "xox")    # value whitespace (3) exceeds the given whitespace (2)
 
-    expect(responseArray[0]).to eq("CLIENT_ERROR bad data chunk")
+    expect(responseArray[0]).to eq("#{ResponseConstants::CLIENT_ERROR} #{ResponseConstants::BAD_DATA_ERROR}")
   end
 
   it "executes an ERROR" do
@@ -117,7 +118,7 @@ RSpec.describe CommandExecuteUtil do
     mapCommand = CommandTranslateUtil.translateCommand(commandString)
     responseArray = CommandExecuteUtil.execute(mapCommand, cache)
 
-    expect(responseArray[0]).to eq("ERROR")
+    expect(responseArray[0]).to eq(ResponseConstants::ERROR)
   end
 
   it "executes a NOT_STORED" do
@@ -126,6 +127,6 @@ RSpec.describe CommandExecuteUtil do
     mapCommand = CommandTranslateUtil.translateCommand(commandString)
     responseArray = CommandExecuteUtil.execute(mapCommand, cache, "xo")
 
-    expect(responseArray[0]).to eq("NOT_STORED")
+    expect(responseArray[0]).to eq(ResponseConstants::NOT_STORED)
   end
 end

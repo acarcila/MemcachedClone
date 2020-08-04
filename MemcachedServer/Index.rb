@@ -2,7 +2,6 @@ require "socket"
 require_relative "Controller/Util/CommandTranslateUtil/CommandTranslateUtil"
 require_relative "Controller/Util/CommandExecuteUtil/CommandExecuteUtil"
 require_relative "Controller/Util/CacheManagingUtil/CacheManagingUtil"
-require_relative "Model/Item/Item"
 require_relative "Model/Cache/Cache"
 
 exit if defined?(Ocra)
@@ -28,9 +27,9 @@ tcpThread = Thread.new do
       until client.eof?
         msg = (client.gets).strip
         mapCommand = CommandTranslateUtil.translateCommand(msg)
-        unless mapCommand["command"] =~ /g(e|a)t(s|)\b/ || mapCommand["status"] =~ /ERROR/
+        unless mapCommand[CommandPartsConstants::COMMAND] =~ CommandConstants::GET_GETS_REGEX || mapCommand[CommandPartsConstants::STATUS] =~ ResponseConstants::ERROR_REGEX
           value = (client.gets).strip
-          until value.size >= mapCommand["whitespace"]
+          until value.size >= mapCommand[CommandPartsConstants::WHITESPACE]
             value += "\r\n#{((client.gets).strip)}"
           end
         end

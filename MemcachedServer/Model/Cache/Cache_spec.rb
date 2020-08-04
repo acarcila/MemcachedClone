@@ -1,5 +1,6 @@
 require_relative "Cache"
 require_relative "../Item/Item"
+require_relative "../../Controller/Util/Constants/ResponseConstants"
 
 RSpec.describe Item do
   it "GET: gets the item with the specified key" do
@@ -24,7 +25,7 @@ RSpec.describe Item do
     # test adding an existing key
     cache.memory["key2"] = Item.new(value: "value", casToken: 2, whitespace: 5, ttl: 20)
 
-    expect(cache.set(key: "key2", value: "newValue", whitespace: 8, ttl: 10)).to eq("STORED")
+    expect(cache.set(key: "key2", value: "newValue", whitespace: 8, ttl: 10)).to eq(ResponseConstants::STORED)
     expect(cache.memory["key2"].value).to eq("newValue")
     expect(cache.memory["key2"].ttl).to eq(10)
     expect(cache.memory["key2"].whitespace).to eq(8)
@@ -43,7 +44,7 @@ RSpec.describe Item do
     # test adding an existing key
     cache.memory["key2"] = Item.new(value: "value", casToken: 2, whitespace: 5, ttl: 20)
 
-    expect(cache.add(key: "key2", value: "newValue", whitespace: 8, ttl: 10)).to eq("NOT_STORED")
+    expect(cache.add(key: "key2", value: "newValue", whitespace: 8, ttl: 10)).to eq(ResponseConstants::NOT_STORED)
     expect(cache.memory["key2"].value).to eq("value")
     expect(cache.memory["key2"].ttl).to eq(20)
     expect(cache.memory["key2"].whitespace).to eq(5)
@@ -53,13 +54,13 @@ RSpec.describe Item do
     cache = Cache.new()
 
     # test replacing a new key
-    expect(cache.replace(key: "key", value: "value", whitespace: 5, ttl: 10)).to eq("NOT_STORED")
+    expect(cache.replace(key: "key", value: "value", whitespace: 5, ttl: 10)).to eq(ResponseConstants::NOT_STORED)
     expect(cache.memory).to be_empty
 
     # test replacing an existing key
     cache.memory["key2"] = Item.new(value: "value", casToken: 2, whitespace: 5, ttl: 20)
 
-    expect(cache.replace(key: "key2", value: "newValue", whitespace: 8, ttl: 10)).to eq("STORED")
+    expect(cache.replace(key: "key2", value: "newValue", whitespace: 8, ttl: 10)).to eq(ResponseConstants::STORED)
     expect(cache.memory["key2"].value).to eq("newValue")
     expect(cache.memory["key2"].ttl).to eq(10)
     expect(cache.memory["key2"].whitespace).to eq(8)
@@ -69,13 +70,13 @@ RSpec.describe Item do
     cache = Cache.new()
 
     # test appending a new key
-    expect(cache.append(key: "key", value: "value", whitespace: 5, ttl: 10)).to eq("NOT_STORED")
+    expect(cache.append(key: "key", value: "value", whitespace: 5, ttl: 10)).to eq(ResponseConstants::NOT_STORED)
     expect(cache.memory).to be_empty
 
     # test appending an existing key
     cache.memory["key2"] = Item.new(value: "value", casToken: 2, whitespace: 5, ttl: 20)
 
-    expect(cache.append(key: "key2", value: "append", whitespace: 6, ttl: 10)).to eq("STORED")
+    expect(cache.append(key: "key2", value: "append", whitespace: 6, ttl: 10)).to eq(ResponseConstants::STORED)
     expect(cache.memory["key2"].value).to eq("valueappend")
     expect(cache.memory["key2"].ttl).to eq(10)
     expect(cache.memory["key2"].whitespace).to eq(11)
@@ -85,13 +86,13 @@ RSpec.describe Item do
     cache = Cache.new()
 
     # test prepending a new key
-    expect(cache.prepend(key: "key", value: "value", whitespace: 5, ttl: 10)).to eq("NOT_STORED")
+    expect(cache.prepend(key: "key", value: "value", whitespace: 5, ttl: 10)).to eq(ResponseConstants::NOT_STORED)
     expect(cache.memory).to be_empty
 
     # test prepending an existing key
     cache.memory["key2"] = Item.new(value: "value", casToken: 2, whitespace: 5, ttl: 20)
 
-    expect(cache.prepend(key: "key2", value: "prepend", whitespace: 7, ttl: 10)).to eq("STORED")
+    expect(cache.prepend(key: "key2", value: "prepend", whitespace: 7, ttl: 10)).to eq(ResponseConstants::STORED)
     expect(cache.memory["key2"].value).to eq("prependvalue")
     expect(cache.memory["key2"].ttl).to eq(10)
     expect(cache.memory["key2"].whitespace).to eq(12)
@@ -101,13 +102,13 @@ RSpec.describe Item do
     cache = Cache.new()
 
     # test replacing a new key
-    expect(cache.cas(key: "key", value: "value", whitespace: 5, ttl: 10, casToken: 1)).to eq("NOT_FOUND")
+    expect(cache.cas(key: "key", value: "value", whitespace: 5, ttl: 10, casToken: 1)).to eq(ResponseConstants::NOT_FOUND)
     expect(cache.memory).to be_empty
 
     # test replacing an existing key
     cache.memory["key2"] = Item.new(value: "value", casToken: 2, whitespace: 5, ttl: 20)
 
-    expect(cache.cas(key: "key2", value: "newValue", whitespace: 8, ttl: 10, casToken: 2)).to eq("STORED")
+    expect(cache.cas(key: "key2", value: "newValue", whitespace: 8, ttl: 10, casToken: 2)).to eq(ResponseConstants::STORED)
     expect(cache.memory["key2"].value).to eq("newValue")
     expect(cache.memory["key2"].ttl).to eq(10)
     expect(cache.memory["key2"].whitespace).to eq(8)
@@ -115,7 +116,7 @@ RSpec.describe Item do
     # test when de casToken does not match
     cache.memory["key3"] = Item.new(value: "value", casToken: 5, whitespace: 5, ttl: 20)
 
-    expect(cache.cas(key: "key3", value: "newValue", whitespace: 8, ttl: 10, casToken: 2)).to eq("EXISTS")
+    expect(cache.cas(key: "key3", value: "newValue", whitespace: 8, ttl: 10, casToken: 2)).to eq(ResponseConstants::EXISTS)
     expect(cache.memory["key3"].value).to eq("value")
     expect(cache.memory["key3"].ttl).to eq(20)
     expect(cache.memory["key3"].whitespace).to eq(5)

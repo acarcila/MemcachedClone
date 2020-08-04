@@ -1,4 +1,5 @@
 require_relative "../Item/Item"
+require_relative "../../Controller/Util/Constants/ResponseConstants"
 
 class Cache
   @@casTokenCount = 0         #class variable
@@ -21,16 +22,16 @@ class Cache
   def set(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     ttl ||= @memory[key].ttl if @memory[key]
     @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
-    "STORED"
+    ResponseConstants::STORED
   end
 
   # adds an item with the specified key but fails if the key already exists
   def add(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     unless @memory[key]
       @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
-      "STORED"
+      ResponseConstants::STORED
     else
-      "NOT_STORED"
+      ResponseConstants::NOT_STORED
     end
   end
 
@@ -39,9 +40,9 @@ class Cache
     ttl ||= @memory[key].ttl
     if @memory[key]
       @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
-      "STORED"
+      ResponseConstants::STORED
     else
-      "NOT_STORED"
+      ResponseConstants::NOT_STORED
     end
   end
 
@@ -49,9 +50,9 @@ class Cache
   def append(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     if @memory[key]
       @memory[key].append(value: value, casToken: @@casTokenCount += 1, whitespace: whitespace, ttl: ttl, flags: flags)
-      "STORED"
+      ResponseConstants::STORED
     else
-      "NOT_STORED"
+      ResponseConstants::NOT_STORED
     end
   end
 
@@ -59,9 +60,9 @@ class Cache
   def prepend(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     if @memory[key]
       @memory[key].prepend(value: value, casToken: @@casTokenCount += 1, whitespace: whitespace, ttl: ttl, flags: flags)
-      "STORED"
+      ResponseConstants::STORED
     else
-      "NOT_STORED"
+      ResponseConstants::NOT_STORED
     end
   end
 
@@ -71,11 +72,11 @@ class Cache
     if @memory[key]
       if @memory[key].casToken == casToken
         @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
-        return "STORED"
+        return ResponseConstants::STORED
       end
-      return "EXISTS"
+      return ResponseConstants::EXISTS
     else
-      return"NOT_FOUND"
+      return ResponseConstants::NOT_FOUND
     end
   end
 

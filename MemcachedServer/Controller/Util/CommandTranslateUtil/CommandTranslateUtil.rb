@@ -1,3 +1,6 @@
+require_relative "../Constants/CommandConstants"
+require_relative "../Constants/CommandPartsConstants"
+
 class CommandTranslateUtil
   def CommandTranslateUtil.splitString(command)
     command.split
@@ -6,10 +9,10 @@ class CommandTranslateUtil
   def CommandTranslateUtil.getCommand(array)
     command = array.shift
     map = Hash.new
-    if command =~ /(set|add|replace|append|prepend|cas|(g(e|a)t(s|)))\b/
-      map["command"] = command
+    if command =~ CommandConstants::VALID_COMMAND_REGEX
+      map[CommandPartsConstants::COMMAND] = command
     else
-      map["status"] = "ERROR"
+      map[CommandPartsConstants::STATUS] = ResponseConstants::ERROR
     end
 
     map
@@ -22,22 +25,22 @@ class CommandTranslateUtil
     ttl = array.pop
     flags = array.pop
 
-    if whitespace =~ /\d+/
-      map["whitespace"] = whitespace.to_i
+    if whitespace =~ CommandConstants::INTEGER_REGEX
+      map[CommandPartsConstants::WHITESPACE] = whitespace.to_i
     else
-      map["status"] = "ERROR"
+      map[CommandPartsConstants::STATUS] = ResponseConstants::ERROR
     end
 
-    if ttl =~ /\d+/
-      map["ttl"] = ttl.to_i
+    if ttl =~ CommandConstants::INTEGER_REGEX
+      map[CommandPartsConstants::TTL] = ttl.to_i
     else
-      map["status"] = "ERROR"
+      map[CommandPartsConstants::STATUS] = ResponseConstants::ERROR
     end
 
-    if flags =~ /\d+/
-      map["flags"] = flags.to_i
+    if flags =~ CommandConstants::INTEGER_REGEX
+      map[CommandPartsConstants::FLAGS] = flags.to_i
     else
-      map["status"] = "ERROR"
+      map[CommandPartsConstants::STATUS] = ResponseConstants::ERROR
     end
 
     map
@@ -47,10 +50,10 @@ class CommandTranslateUtil
     map = Hash.new
 
     casToken = array.pop
-    if casToken =~ /\d+/
-      map["casToken"] = casToken.to_i
+    if casToken =~ CommandConstants::INTEGER_REGEX
+      map[CommandPartsConstants::CASTOKEN] = casToken.to_i
     else
-      map["status"] = "ERROR"
+      map[CommandPartsConstants::STATUS] = ResponseConstants::ERROR
     end
     map
   end
@@ -59,12 +62,12 @@ class CommandTranslateUtil
     map = Hash.new
 
     if array.length == 1
-      map["keys"] = array
+      map[CommandPartsConstants::KEYS] = array
     elsif array.length < 1
-      map["status"] = "ERROR"
+      map[CommandPartsConstants::STATUS] = ResponseConstants::ERROR
     else
-      map["status"] = "CLIENT_ERROR"
-      map["error"] = "bad command line format"
+      map[CommandPartsConstants::STATUS] = ResponseConstants::CLIENT_ERROR
+      map[CommandPartsConstants::ERROR] = ResponseConstants::LINE_FORMAT_ERROR
     end
 
     map
@@ -74,16 +77,16 @@ class CommandTranslateUtil
     map = Hash.new
 
     unless array.length < 1
-      map["keys"] = array
+      map[CommandPartsConstants::KEYS] = array
     else
-      map["status"] = "ERROR"
+      map[CommandPartsConstants::STATUS] = ResponseConstants::ERROR
     end
     map
   end
 
   def CommandTranslateUtil.ifNotGet(map, proc, procElse = nil)
-    unless map["status"] == "ERROR"
-      if map["command"] =~ /set|add|replace|append|prepend|cas\b/
+    unless map[CommandPartsConstants::STATUS] =~ ResponseConstants::ERROR_REGEX
+      if map[CommandPartsConstants::COMMAND] =~ CommandConstants::NOT_GET_REGEX
         proc.call
       elsif procElse
         procElse.call
@@ -99,7 +102,7 @@ class CommandTranslateUtil
     map = getCommand(array)
 
     CommandTranslateUtil.ifNotGet(map, Proc.new do
-      if map["command"] == "cas"
+      if map[CommandPartsConstants::COMMAND] == CommandConstants::CAS
         map = map.merge(getCasParams(array))
       end
       map = map.merge(getParams(array))

@@ -1,4 +1,6 @@
 require_relative "../../../Model/Cache/Cache"
+require_relative "../Constants/CommandPartsConstants"
+require_relative "../Constants/CommandConstants"
 
 class CommandExecuteUtil
   def CommandExecuteUtil.checkStatus(commandResponse, mapCommand)
@@ -34,54 +36,54 @@ class CommandExecuteUtil
   def CommandExecuteUtil.execute(mapCommand, cache, value = nil)
     responseArray = Array.new
     commandResponse = nil
-    unless mapCommand["status"]
-      if mapCommand["command"] =~ /set|add|replace|append|prepend|cas\b/
-        if mapCommand["whitespace"] != value.size
-          responseArray << "CLIENT_ERROR bad data chunk"
+    unless mapCommand[CommandPartsConstants::STATUS]
+      if mapCommand[CommandPartsConstants::COMMAND] =~ CommandConstants::NOT_GET_REGEX
+        if mapCommand[CommandPartsConstants::WHITESPACE] != value.size
+          responseArray << "#{ResponseConstants::CLIENT_ERROR} #{ResponseConstants::BAD_DATA_ERROR}"
           return responseArray
         end
         # executes the command by name
-        unless mapCommand["command"] == "cas"
+        unless mapCommand[CommandPartsConstants::COMMAND] == CommandConstants::CAS
           commandResponse = cache.send(
-            mapCommand["command"],
-            key: mapCommand["keys"][0],
+            mapCommand[CommandPartsConstants::COMMAND],
+            key: mapCommand[CommandPartsConstants::KEYS][0],
             value: value,
-            ttl: mapCommand["ttl"],
-            whitespace: mapCommand["whitespace"],
-            flags: mapCommand["flags"],
+            ttl: mapCommand[CommandPartsConstants::TTL],
+            whitespace: mapCommand[CommandPartsConstants::WHITESPACE],
+            flags: mapCommand[CommandPartsConstants::FLAGS],
           )
         else
           commandResponse = cache.send(
-            mapCommand["command"],
-            key: mapCommand["keys"][0],
+            mapCommand[CommandPartsConstants::COMMAND],
+            key: mapCommand[CommandPartsConstants::KEYS][0],
             value: value,
-            ttl: mapCommand["ttl"],
-            whitespace: mapCommand["whitespace"],
-            flags: mapCommand["flags"],
-            casToken: mapCommand["casToken"],
+            ttl: mapCommand[CommandPartsConstants::TTL],
+            whitespace: mapCommand[CommandPartsConstants::WHITESPACE],
+            flags: mapCommand[CommandPartsConstants::FLAGS],
+            casToken: mapCommand[CommandPartsConstants::CAS_TOKEN],
           )
         end
 
         responseArray << commandResponse
 
         return responseArray
-      elsif mapCommand["command"] =~ /g(e|a)t\b/
-        mapCommand["keys"].each do |key|
+      elsif mapCommand[CommandPartsConstants::COMMAND] == CommandConstants::GET
+        mapCommand[CommandPartsConstants::KEYS].each do |key|
           commandResponse = cache.get(key)
           responseArray += itemToResponse(key, commandResponse)
         end
       else
-        mapCommand["keys"].each do |key|
+        mapCommand[CommandPartsConstants::KEYS].each do |key|
           commandResponse = cache.get(key)
           responseArray += itemToGetsResponse(key, commandResponse)
         end
       end
-      responseArray << "END"
+      responseArray << ResponseConstants::END_
 
       return responseArray
     end
 
-    responseArray += errorToResponse(mapCommand["status"], *mapCommand["error"])
+    responseArray += errorToResponse(mapCommand[CommandPartsConstants::STATUS], *mapCommand[CommandPartsConstants::ERROR])
     return responseArray
   end
 end
