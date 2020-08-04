@@ -14,6 +14,16 @@ class CommandExecuteUtil
     response
   end
 
+  def CommandExecuteUtil.itemToGetsResponse(key, item)
+    response = []
+    if item
+      response << "VALUE #{key} #{item.flags} #{item.whitespace} #{item.casToken}"
+      response << "#{item.value}"
+    end
+
+    response
+  end
+
   def CommandExecuteUtil.errorToResponse(status, error = nil)
     response = []
     response << "#{status} #{error}".strip
@@ -25,7 +35,7 @@ class CommandExecuteUtil
     responseArray = Array.new
     commandResponse = nil
     unless mapCommand["status"]
-      if mapCommand["command"] =~ /set|add|replace|append|prepend|cas/
+      if mapCommand["command"] =~ /set|add|replace|append|prepend|cas\b/
         if mapCommand["whitespace"] != value.size
           responseArray << "CLIENT_ERROR bad data chunk"
           return responseArray
@@ -55,10 +65,16 @@ class CommandExecuteUtil
         responseArray << commandResponse
 
         return responseArray
-      end
-      mapCommand["keys"].each do |key|
-        commandResponse = cache.get(key)
-        responseArray += itemToResponse(key, commandResponse)
+      elsif mapCommand["command"] =~ /g(e|a)t\b/
+        mapCommand["keys"].each do |key|
+          commandResponse = cache.get(key)
+          responseArray += itemToResponse(key, commandResponse)
+        end
+      else
+        mapCommand["keys"].each do |key|
+          commandResponse = cache.get(key)
+          responseArray += itemToGetsResponse(key, commandResponse)
+        end
       end
       responseArray << "END"
 
