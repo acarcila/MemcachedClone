@@ -47,7 +47,11 @@ class CommandTranslateUtil
     map = Hash.new
 
     casToken = array.pop
-    map["casToken"] = casToken
+    if casToken =~ /\d+/
+      map["casToken"] = casToken.to_i
+    else
+      map["status"] = "ERROR"
+    end
     map
   end
 

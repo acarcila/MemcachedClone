@@ -31,9 +31,28 @@ class CommandExecuteUtil
           return responseArray
         end
         # executes the command by name
-        commandResponse = cache.send(mapCommand["command"], key: mapCommand["keys"][0], value: value, ttl: mapCommand["ttl"], whitespace: mapCommand["whitespace"], flags: mapCommand["flags"])
+        unless mapCommand["command"] == "cas"
+          commandResponse = cache.send(
+            mapCommand["command"],
+            key: mapCommand["keys"][0],
+            value: value,
+            ttl: mapCommand["ttl"],
+            whitespace: mapCommand["whitespace"],
+            flags: mapCommand["flags"],
+          )
+        else
+          commandResponse = cache.send(
+            mapCommand["command"],
+            key: mapCommand["keys"][0],
+            value: value,
+            ttl: mapCommand["ttl"],
+            whitespace: mapCommand["whitespace"],
+            flags: mapCommand["flags"],
+            casToken: mapCommand["casToken"],
+          )
+        end
 
-        responseArray << (commandResponse ? "STORED" : "NOT_STORED")
+        responseArray << commandResponse
 
         return responseArray
       end

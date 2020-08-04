@@ -21,14 +21,16 @@ class Cache
   def set(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     ttl ||= @memory[key].ttl if @memory[key]
     @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
+    "STORED"
   end
 
   # adds an item with the specified key but fails if the key already exists
   def add(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     unless @memory[key]
       @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
+      "STORED"
     else
-      false
+      "NOT_STORED"
     end
   end
 
@@ -37,8 +39,9 @@ class Cache
     ttl ||= @memory[key].ttl
     if @memory[key]
       @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
+      "STORED"
     else
-      false
+      "NOT_STORED"
     end
   end
 
@@ -46,8 +49,9 @@ class Cache
   def append(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     if @memory[key]
       @memory[key].append(value: value, casToken: @@casTokenCount += 1, whitespace: whitespace, ttl: ttl, flags: flags)
+      "STORED"
     else
-      false
+      "NOT_STORED"
     end
   end
 
@@ -55,8 +59,23 @@ class Cache
   def prepend(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     if @memory[key]
       @memory[key].prepend(value: value, casToken: @@casTokenCount += 1, whitespace: whitespace, ttl: ttl, flags: flags)
+      "STORED"
     else
-      false
+      "NOT_STORED"
+    end
+  end
+
+  # replace an item with the specified key but fails if the key does not exists
+  def cas(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0, casToken: nil)
+    ttl ||= @memory[key].ttl
+    if @memory[key]
+      if @memory[key].casToken == casToken
+        @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
+        return "STORED"
+      end
+      return "EXISTS"
+    else
+      return"NOT_FOUND"
     end
   end
 
