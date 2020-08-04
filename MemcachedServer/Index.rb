@@ -5,6 +5,9 @@ require_relative "Controller/Util/CacheManagingUtil/CacheManagingUtil"
 require_relative "Model/Item/Item"
 require_relative "Model/Cache/Cache"
 
+exit if defined?(Ocra)
+port = ARGV[0]
+
 cache = Cache.new
 puts cache.set(key: "prueba", value: 12, ttl: 3, whitespace: 2)
 puts cache.get("prueba")
@@ -13,7 +16,7 @@ puts cache.add(key: "prueba2", value: 15, ttl: 7, whitespace: 2)
 puts cache.get("prueba2")
 puts cache.replace(key: "prueba2", value: 1004, ttl: 4, whitespace: 4)
 
-server = TCPServer.new 3000
+server = TCPServer.new port
 
 $stdout.sync = true
 
