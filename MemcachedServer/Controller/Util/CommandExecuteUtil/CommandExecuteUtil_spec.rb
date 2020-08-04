@@ -1,6 +1,7 @@
 require_relative "CommandExecuteUtil"
 require_relative "../CommandTranslateUtil/CommandTranslateUtil"
 require_relative "../../../Model/Cache/Cache"
+require_relative "../../../Model/Item/Item"
 
 RSpec.describe CommandExecuteUtil do
   it "executes the SET command" do
@@ -82,6 +83,21 @@ RSpec.describe CommandExecuteUtil do
     expect(responseArray[0]).to eq("VALUE key 0 2")
     expect(responseArray[1]).to eq("10")
     expect(responseArray[2]).to eq("VALUE key2 0 3")
+    expect(responseArray[3]).to eq("200")
+    expect(responseArray[4]).to eq("END")
+  end
+
+  it "executes the GETS command" do
+    cache = Cache.new
+    cache.memory["key"] = Item.new(value: 10, casToken: 1, whitespace: 2, ttl: 20)
+    cache.memory["key2"] = Item.new(value: 200, casToken: 2, whitespace: 3, ttl: 20)
+    commandString = "gets key key2"
+    mapCommand = CommandTranslateUtil.translateCommand(commandString)
+    responseArray = CommandExecuteUtil.execute(mapCommand, cache)
+
+    expect(responseArray[0]).to eq("VALUE key 0 2 1")
+    expect(responseArray[1]).to eq("10")
+    expect(responseArray[2]).to eq("VALUE key2 0 3 2")
     expect(responseArray[3]).to eq("200")
     expect(responseArray[4]).to eq("END")
   end
