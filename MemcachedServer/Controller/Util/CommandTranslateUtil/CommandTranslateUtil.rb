@@ -73,8 +73,11 @@ class CommandTranslateUtil
   def CommandTranslateUtil.getGetsKeys(array)
     map = Hash.new
 
-    map["keys"] = array
-
+    unless array.length < 1
+      map["keys"] = array
+    else
+      map["status"] = "ERROR"
+    end
     map
   end
 
