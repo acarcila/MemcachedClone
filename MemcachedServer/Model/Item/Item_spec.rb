@@ -28,7 +28,6 @@ describe Item do
   it "calculates the timestamp the item should die" do
     item = Item.new(value: 10, ttl: 3600)
     time = item.createdAt + 3600
-    puts item.diesAt
     expect(item.diesAt).to eq(time)
   end
 end
