@@ -38,8 +38,6 @@ class CommandExecuteUtil
         return responseArray
       end
       mapCommand["keys"].each do |key|
-        puts "key"
-        puts key
         commandResponse = cache.get(key)
         responseArray += itemToResponse(key, commandResponse)
       end
