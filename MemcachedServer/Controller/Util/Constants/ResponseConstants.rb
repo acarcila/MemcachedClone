@@ -8,6 +8,7 @@ class ResponseConstants
   SERVER_ERROR = "SERVER_ERROR"
   LINE_FORMAT_ERROR = "bad command line format"
   BAD_DATA_ERROR = "bad data chunk"
+  SELECT_PORT = "Select a port:"
   SERVER_CONNECTED_TEMPLATE = "Server started in port: %d"
   ITEM_TEMPLATE = "VALUE %s %d %d"
   ITEM_CAS_TEMPLATE = "VALUE %s %d %d %d"
