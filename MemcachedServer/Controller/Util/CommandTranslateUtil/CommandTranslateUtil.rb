@@ -84,12 +84,12 @@ class CommandTranslateUtil
     map
   end
 
-  def CommandTranslateUtil.ifNotGet(map, proc, procElse = nil)
+  def CommandTranslateUtil.ifNotGet(map, lambda, lambdaElse = nil)
     unless map[CommandPartsConstants::STATUS] =~ ResponseConstants::ERROR_REGEX
       if map[CommandPartsConstants::COMMAND] =~ CommandConstants::NOT_GET_REGEX
-        proc.call
-      elsif procElse
-        procElse.call
+        lambda.call
+      elsif lambdaElse
+        lambdaElse.call
       end
     else
       return map
@@ -101,18 +101,18 @@ class CommandTranslateUtil
 
     map = getCommand(array)
 
-    CommandTranslateUtil.ifNotGet(map, Proc.new do
+    CommandTranslateUtil.ifNotGet(map, lambda {
       if map[CommandPartsConstants::COMMAND] == CommandConstants::CAS
         map = map.merge(getCasParams(array))
       end
       map = map.merge(getParams(array))
-    end)
+    })
 
-    CommandTranslateUtil.ifNotGet(map, Proc.new do
+    CommandTranslateUtil.ifNotGet(map, lambda {
       map = map.merge(getKeys(array))
-    end, Proc.new do
+    }, lambda {
       map = map.merge(getGetsKeys(array))
-    end)
+    })
 
     map
   end
