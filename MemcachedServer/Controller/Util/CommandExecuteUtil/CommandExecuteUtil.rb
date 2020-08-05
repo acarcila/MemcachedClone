@@ -1,6 +1,7 @@
 require_relative "../../../Model/Cache/Cache"
 require_relative "../Constants/CommandPartsConstants"
 require_relative "../Constants/CommandConstants"
+require_relative "../Constants/ResponseConstants"
 
 class CommandExecuteUtil
   def CommandExecuteUtil.checkStatus(commandResponse, mapCommand)
@@ -9,8 +10,8 @@ class CommandExecuteUtil
   def CommandExecuteUtil.itemToResponse(key, item)
     response = []
     if item
-      response << "VALUE #{key} #{item.flags} #{item.whitespace}"
-      response << "#{item.value}"
+      response << ResponseConstants::ITEM_TEMPLATE % [key, item.flags, item.whitespace]
+      response << ResponseConstants::VALUE_TEMPLATE % item.value
     end
 
     response
@@ -19,8 +20,8 @@ class CommandExecuteUtil
   def CommandExecuteUtil.itemToGetsResponse(key, item)
     response = []
     if item
-      response << "VALUE #{key} #{item.flags} #{item.whitespace} #{item.casToken}"
-      response << "#{item.value}"
+      response << ResponseConstants::ITEM_CAS_TEMPLATE % [key, item.flags, item.whitespace, item.casToken]
+      response << ResponseConstants::VALUE_TEMPLATE % item.value
     end
 
     response
@@ -28,7 +29,7 @@ class CommandExecuteUtil
 
   def CommandExecuteUtil.errorToResponse(status, error = nil)
     response = []
-    response << "#{status} #{error}".strip
+    response << (ResponseConstants::ERROR_TEMPLATE % [status, error]).strip
 
     response
   end

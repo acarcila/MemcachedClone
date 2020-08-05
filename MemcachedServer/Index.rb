@@ -15,16 +15,16 @@ $stdout.sync = true
 
 threads = []
 tcpThread = Thread.new do
+  puts ResponseConstants::SERVER_CONNECTED_TEMPLATE % port
   loop do
     Thread.start(server.accept) do |client|
-      client.puts("conectado")
       until client.eof?
         msg = (client.gets).strip
         mapCommand = CommandTranslateUtil.translateCommand(msg)
         unless mapCommand[CommandPartsConstants::COMMAND] =~ CommandConstants::GET_GETS_REGEX || mapCommand[CommandPartsConstants::STATUS] =~ ResponseConstants::ERROR_REGEX
-          value = (client.gets).strip
+          value = (client.gets).gsub(/\r\n/, "")
           until value.size >= mapCommand[CommandPartsConstants::WHITESPACE]
-            value += "\r\n#{((client.gets).strip)}"
+            value += "\r\n#{((client.gets).gsub(/\r\n/, ""))}"
           end
         end
 
@@ -39,3 +39,7 @@ cacheThread = CacheManagingUtil.startKeyManaging(cache)
 threads = [tcpThread, cacheThread]
 
 threads.each(&:join)
+
+# def cleanString(string)
+#   (string).gsub(/\r\n/, "")
+# end
