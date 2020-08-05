@@ -10,6 +10,8 @@ class ResponseConstants
   BAD_DATA_ERROR = "bad data chunk"
   SELECT_PORT = "Select a port:"
   SERVER_CONNECTED_TEMPLATE = "Server started in port: %d"
+  CLIENT_CONNECTED_TEMPLATE = "New connection from: %s:%d"
+  CLIENT_DISCONNECTED_TEMPLATE = "Client %s:%d disconnected"
   ITEM_TEMPLATE = "VALUE %s %d %d"
   ITEM_CAS_TEMPLATE = "VALUE %s %d %d %d"
   VALUE_TEMPLATE = "%s"
