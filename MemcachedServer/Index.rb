@@ -1,4 +1,7 @@
 require "socket"
+require_relative "Controller/Util/Constants/CommandConstants"
+require_relative "Controller/Util/Constants/CommandPartsConstants"
+require_relative "Controller/Util/Constants/ResponseConstants"
 require_relative "Controller/Util/CommandTranslateUtil/CommandTranslateUtil"
 require_relative "Controller/Util/CommandExecuteUtil/CommandExecuteUtil"
 require_relative "Controller/Util/CacheManagingUtil/CacheManagingUtil"
@@ -7,8 +10,12 @@ require_relative "Model/Cache/Cache"
 exit if defined?(Ocra)
 port = ARGV[0]
 
-cache = Cache.new
+until (port =~ CommandConstants::INTEGER_REGEX)
+  puts ResponseConstants::SELECT_PORT
+  port = STDIN.gets.strip
+end
 
+cache = Cache.new
 server = TCPServer.new port
 
 $stdout.sync = true
@@ -42,4 +49,15 @@ threads.each(&:join)
 
 # def cleanString(string)
 #   (string).gsub(/\r\n/, "")
+# end
+
+# def checkPortAvailability(port)
+#   begin
+#     checkServer = TCPServer.new port
+#     checkServer.close
+#   rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+#     return false
+#   end
+
+#   return true
 # end
