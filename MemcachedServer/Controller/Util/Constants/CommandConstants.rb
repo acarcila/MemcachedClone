@@ -7,6 +7,7 @@ class CommandConstants
   APPEND = "append"
   PREPEND = "prepend"
   CAS = "cas"
+  QUIT = "quit"
   INTEGER_REGEX = /\d+\b/
   GET_GETS_REGEX = /#{GET}(s|)\b/
   NOT_GET_REGEX = /#{SET}|#{ADD}|#{REPLACE}|#{APPEND}|#{PREPEND}|#{CAS}\b/
