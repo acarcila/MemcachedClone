@@ -57,6 +57,18 @@ RSpec.describe CommandTranslateUtil do
     expect(command[CommandPartsConstants::WHITESPACE]).to eq(2)
   end
 
+  it "translates the Cas command" do
+    commandString = "cas key 0 3600 2 5"
+    command = CommandTranslateUtil.translateCommand(commandString)
+
+    expect(command[CommandPartsConstants::COMMAND]).to eq("cas")
+    expect(command[CommandPartsConstants::KEYS][0]).to eq("key")
+    expect(command[CommandPartsConstants::FLAGS]).to eq(0)
+    expect(command[CommandPartsConstants::TTL]).to eq(3600)
+    expect(command[CommandPartsConstants::WHITESPACE]).to eq(2)
+    expect(command[CommandPartsConstants::CAS_TOKEN]).to eq(5)
+  end
+
   it "translates the Get command" do
     commandString = "get key"
     command = CommandTranslateUtil.translateCommand(commandString)
