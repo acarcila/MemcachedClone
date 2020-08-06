@@ -9,9 +9,12 @@ require_relative "Controller/Util/TCPUtil/TCPUtil"
 require_relative "Model/Cache/Cache"
 
 exit if defined?(Ocra)
-port = ARGV[0]
+ipDirection = ARGV[0]
+port = ARGV[1]
 
-until (port =~ CommandConstants::INTEGER_REGEX && TCPUtil.checkPortAvailability(port))
+until (port =~ CommandConstants::INTEGER_REGEX && TCPUtil.checkPortAvailability(ipDirection, port))
+  puts ResponseConstants::SELECT_IP_DIRECTION
+  ipDirection = STDIN.gets.strip
   puts ResponseConstants::SELECT_PORT
   port = STDIN.gets.strip
 end
@@ -21,17 +24,23 @@ cache = Cache.new
 $stdout.sync = true
 
 threads = []
-tcpThread = TCPUtil.createTCPThread(port, lambda { |client|
-  msg = (client.gets).strip
+tcpThread = TCPUtil.createTCPThread(ipDirection, port, lambda { |client|
+  clientInput = client.gets
+  clientInput = "" unless clientInput
+  msg = clientInput.strip
   if msg == CommandConstants::QUIT
     client.close
     return true
   end
   mapCommand = CommandTranslateUtil.translateCommand(msg)
   unless mapCommand[CommandPartsConstants::COMMAND] =~ CommandConstants::GET_GETS_REGEX || mapCommand[CommandPartsConstants::STATUS] =~ ResponseConstants::ERROR_REGEX
-    value = StringUtil.cleanString(client.gets)
+    clientInput = client.gets
+    clientInput = "" unless clientInput
+    value = StringUtil.cleanString(clientInput)
     until value.size >= mapCommand[CommandPartsConstants::WHITESPACE]
-      value += "\r\n#{StringUtil.cleanString(client.gets)}"
+      clientInput = client.gets
+      clientInput = "" unless clientInput
+      value += "\r\n#{StringUtil.cleanString(clientInput)}"
     end
   end
 
