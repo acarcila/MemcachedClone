@@ -18,8 +18,33 @@ class TCPUtil
     return true
   end
 
+  def TCPUtil.processClientFile(client, cache)
+    clientInput = client.gets
+    clientInput = "" unless clientInput
+    msg = clientInput.strip
+    if msg == CommandConstants::QUIT
+      client.close
+      return true
+    end
+    mapCommand = CommandTranslateUtil.translateCommand(msg)
+    unless mapCommand[CommandPartsConstants::COMMAND] =~ CommandConstants::GET_GETS_REGEX || mapCommand[CommandPartsConstants::STATUS] =~ ResponseConstants::ERROR_REGEX
+      clientInput = client.gets
+      clientInput = "" unless clientInput
+      value = StringUtil.cleanString(clientInput)
+      until value.size >= mapCommand[CommandPartsConstants::WHITESPACE]
+        clientInput = client.gets
+        clientInput = "" unless clientInput
+        value += "\r\n#{StringUtil.cleanString(clientInput)}"
+      end
+    end
+
+    responseArray = CommandExecuteUtil.execute(mapCommand, cache, value)
+    client.puts("#{responseArray.shift}\r\n") until responseArray.empty?
+    return false
+  end
+
   # creates a tcp Thread that
-  def TCPUtil.createTCPThread(ipDirection, port, lambdaFunction)
+  def TCPUtil.createTCPThread(ipDirection, port, cache)
     server = TCPServer.new(ipDirection, port)
     puts ResponseConstants::SERVER_CONNECTED_TEMPLATE % [ipDirection, port]
     thread = Thread.new do
@@ -32,7 +57,7 @@ class TCPUtil
 
           isDisconnectClient = false
           until isDisconnectClient
-            isDisconnectClient = lambdaFunction.call(client)
+            isDisconnectClient = processClientFile(client, cache)
 
             begin
               isDisconnectClient |= client.eof? unless isDisconnectClient
