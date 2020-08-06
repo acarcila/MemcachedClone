@@ -8,15 +8,7 @@ require_relative "Controller/Util/CacheManagingUtil/CacheManagingUtil"
 require_relative "Controller/Util/TCPUtil/TCPUtil"
 require_relative "Model/Cache/Cache"
 
-ipDirection = ARGV[0]
-port = ARGV[1]
-
-until (port =~ CommandConstants::INTEGER_REGEX && TCPUtil.checkPortAvailability(ipDirection, port))
-  puts ResponseConstants::SELECT_IP_DIRECTION
-  ipDirection = STDIN.gets.strip
-  puts ResponseConstants::SELECT_PORT
-  port = STDIN.gets.strip
-end
+ipDirection, port = TCPUtil.getIPAndPort
 
 cache = Cache.new
 

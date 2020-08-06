@@ -7,6 +7,20 @@ require_relative "../CommandExecuteUtil/CommandExecuteUtil"
 require_relative "../../../Model/Cache/Cache"
 
 class TCPUtil
+  def TCPUtil.getIPAndPort()
+    ipDirection = ARGV[0]
+    port = ARGV[1]
+
+    until (port =~ CommandConstants::INTEGER_REGEX && TCPUtil.checkPortAvailability(ipDirection, port))
+      puts ResponseConstants::SELECT_IP_DIRECTION
+      ipDirection = STDIN.gets.strip
+      puts ResponseConstants::SELECT_PORT
+      port = STDIN.gets.strip
+    end
+
+    return ipDirection, port
+  end
+
   def TCPUtil.checkPortAvailability(ipDirection, port)
     begin
       checkServer = TCPServer.new(ipDirection, port)
