@@ -51,7 +51,7 @@ class CommandTranslateUtil
 
     casToken = array.pop
     if casToken =~ CommandConstants::INTEGER_REGEX
-      map[CommandPartsConstants::CASTOKEN] = casToken.to_i
+      map[CommandPartsConstants::CAS_TOKEN] = casToken.to_i
     else
       map[CommandPartsConstants::STATUS] = ResponseConstants::ERROR
     end
