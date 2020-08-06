@@ -1,3 +1,4 @@
+require "socket"
 require_relative "../Constants/CommandConstants"
 require_relative "../Constants/CommandPartsConstants"
 require_relative "../Constants/ResponseConstants"

@@ -2,7 +2,7 @@ require_relative "Cache"
 require_relative "../Item/Item"
 require_relative "../../Controller/Util/Constants/ResponseConstants"
 
-RSpec.describe Item do
+RSpec.describe Cache do
   it "GET: gets the item with the specified key" do
     cache = Cache.new()
     cache.memory["key"] = Item.new(value: "value", casToken: 1, whitespace: 5, ttl: 10)
