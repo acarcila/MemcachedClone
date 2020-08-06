@@ -7,9 +7,9 @@ require_relative "../CommandExecuteUtil/CommandExecuteUtil"
 require_relative "../../../Model/Cache/Cache"
 
 class TCPUtil
-  def TCPUtil.checkPortAvailability(port)
+  def TCPUtil.checkPortAvailability(ipDirection, port)
     begin
-      checkServer = TCPServer.new port
+      checkServer = TCPServer.new(ipDirection, port)
       checkServer.close
     rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
       return false
@@ -19,9 +19,9 @@ class TCPUtil
   end
 
   # creates a tcp Thread that
-  def TCPUtil.createTCPThread(port, lambdaFunction)
-    server = TCPServer.new port
-    puts ResponseConstants::SERVER_CONNECTED_TEMPLATE % port
+  def TCPUtil.createTCPThread(ipDirection, port, lambdaFunction)
+    server = TCPServer.new(ipDirection, port)
+    puts ResponseConstants::SERVER_CONNECTED_TEMPLATE % [ipDirection, port]
     thread = Thread.new do
       loop do
         Thread.start(server.accept) do |client|
@@ -33,7 +33,12 @@ class TCPUtil
           isDisconnectClient = false
           until isDisconnectClient
             isDisconnectClient = lambdaFunction.call(client)
-            isDisconnectClient |= client.eof? unless isDisconnectClient
+
+            begin
+              isDisconnectClient |= client.eof? unless isDisconnectClient
+            rescue Errno::ECONNABORTED
+              isDisconnectClient = true
+            end
           end
           puts ResponseConstants::CLIENT_DISCONNECTED_TEMPLATE % [clientIP, clientPort]
         end
