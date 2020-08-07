@@ -1,5 +1,6 @@
 class StringUtil
   def StringUtil.cleanString(string)
-    (string).gsub(/\r\n/, "")
+    string = (string).gsub(/\r/, "")
+    (string).gsub(/\n/, "")
   end
 end
