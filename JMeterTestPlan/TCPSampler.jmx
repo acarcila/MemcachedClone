@@ -39,7 +39,7 @@
         <TCPSampler guiclass="TCPSamplerGui" testclass="TCPSampler" testname="TCPSampler" enabled="true">
           <stringProp name="TCPSampler.classname">TCPClientImpl</stringProp>
           <stringProp name="TCPSampler.server">localhost</stringProp>
-          <boolProp name="TCPSampler.reUseConnection">true</boolProp>
+          <boolProp name="TCPSampler.reUseConnection">false</boolProp>
           <stringProp name="TCPSampler.port">3000</stringProp>
           <boolProp name="TCPSampler.nodelay">false</boolProp>
           <stringProp name="TCPSampler.timeout">1000</stringProp>
