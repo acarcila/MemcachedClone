@@ -4,9 +4,6 @@ require_relative "../Constants/CommandConstants"
 require_relative "../Constants/ResponseConstants"
 
 class CommandExecuteUtil
-  def CommandExecuteUtil.checkStatus(commandResponse, mapCommand)
-  end
-
   def CommandExecuteUtil.itemToResponse(key, item)
     response = []
     if item
