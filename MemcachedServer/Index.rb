@@ -15,4 +15,10 @@ cacheThread = CacheManagingUtil.createKeyManagingThread(cache)
 
 threads = [tcpThread, cacheThread]
 
+msg = ""
+until (msg == CommandConstants::QUIT)
+  msg = STDIN.gets.strip
+end
+exit(true) if msg == CommandConstants::QUIT
+
 threads.each(&:join)
