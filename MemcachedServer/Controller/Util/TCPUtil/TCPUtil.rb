@@ -26,7 +26,7 @@ class TCPUtil
     begin
       checkServer = TCPServer.new(ipDirection, port)
       checkServer.close
-    rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH
+    rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH, Errno::EACCES, SocketError
       return false
     end
 
