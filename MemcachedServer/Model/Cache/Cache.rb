@@ -9,7 +9,7 @@ class Cache
     @memory = Hash.new
   end
 
-  # gets the item with the specified key
+  # Gets the item with the specified key
   def get(key)
     if @memory[key]
       @memory[key]
@@ -18,14 +18,14 @@ class Cache
     end
   end
 
-  # adds an item with the specified key or replace the existent one
+  # Adds an item with the specified key or replace the existent one
   def set(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     ttl ||= @memory[key].ttl if @memory[key]
     @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
     ResponseConstants::STORED
   end
 
-  # adds an item with the specified key but fails if the key already exists
+  # Adds an item with the specified key but fails if the key already exists
   def add(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     unless @memory[key]
       @memory[key] = Item.new(value: value, ttl: ttl, casToken: @@casTokenCount += 1, whitespace: whitespace, flags: flags)
@@ -35,7 +35,7 @@ class Cache
     end
   end
 
-  # replace an item with the specified key but fails if the key does not exists
+  # Replace an item with the specified key but fails if the key does not exists
   def replace(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     ttl ||= @memory[key].ttl
     if @memory[key]
@@ -46,7 +46,7 @@ class Cache
     end
   end
 
-  # concats a string after the current value of the item
+  # Concats a string after the current value of the item
   def append(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     if @memory[key]
       @memory[key].append(value: value, casToken: @@casTokenCount += 1, whitespace: whitespace, ttl: ttl, flags: flags)
@@ -56,7 +56,7 @@ class Cache
     end
   end
 
-  # concats a string before the current value of the item
+  # Concats a string before the current value of the item
   def prepend(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0)
     if @memory[key]
       @memory[key].prepend(value: value, casToken: @@casTokenCount += 1, whitespace: whitespace, ttl: ttl, flags: flags)
@@ -66,7 +66,7 @@ class Cache
     end
   end
 
-  # replace an item with the specified key but fails if the key does not exists
+  # Replace an item with the specified key but fails if the key does not exists
   def cas(key: nil, value: nil, ttl: nil, whitespace: 0, flags: 0, casToken: nil)
     ttl ||= @memory[key].ttl
     if @memory[key]
@@ -80,7 +80,7 @@ class Cache
     end
   end
 
-  # delete the expired keys in the memory at a given time
+  # Delete the expired keys in the memory at a given time
   def deleteExpiredKeys(currentTime: Time.now)
     memory.delete_if { |key, item| currentTime > item.diesAt }
   end

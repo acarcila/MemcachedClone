@@ -2,10 +2,12 @@ require_relative "../Constants/CommandConstants"
 require_relative "../Constants/CommandPartsConstants"
 
 class CommandTranslateUtil
+  # Transforms the command string to an array
   def CommandTranslateUtil.splitString(command)
     command.split
   end
 
+  # Gets the command part of the command array
   def CommandTranslateUtil.getCommand(array)
     command = array.shift
     map = Hash.new
@@ -18,6 +20,7 @@ class CommandTranslateUtil
     map
   end
 
+  # Gets the whitespace, ttl and flags part of the command array
   def CommandTranslateUtil.getParams(array)
     map = Hash.new
 
@@ -46,6 +49,7 @@ class CommandTranslateUtil
     map
   end
 
+  # Gets the casToken part of the command array
   def CommandTranslateUtil.getCasParams(array)
     map = Hash.new
 
@@ -58,6 +62,7 @@ class CommandTranslateUtil
     map
   end
 
+  # Gets the key of the command array
   def CommandTranslateUtil.getKeys(array)
     map = Hash.new
 
@@ -73,6 +78,7 @@ class CommandTranslateUtil
     map
   end
 
+  # Gets the keys of the command array when is a get or gets
   def CommandTranslateUtil.getGetsKeys(array)
     map = Hash.new
 
@@ -84,6 +90,7 @@ class CommandTranslateUtil
     map
   end
 
+  # Checks if the command is not a get and calls a given function if it is and another if it is not
   def CommandTranslateUtil.ifNotGet(map, lambda, lambdaElse = nil)
     unless map[CommandPartsConstants::STATUS] =~ ResponseConstants::ERROR_REGEX
       if map[CommandPartsConstants::COMMAND] =~ CommandConstants::NOT_GET_REGEX
@@ -96,6 +103,7 @@ class CommandTranslateUtil
     end
   end
 
+  # Translates the string command to a map with each part
   def CommandTranslateUtil.translateCommand(command)
     array = splitString(command)
 

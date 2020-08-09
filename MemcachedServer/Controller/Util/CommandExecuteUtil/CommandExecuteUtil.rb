@@ -4,6 +4,7 @@ require_relative "../Constants/CommandConstants"
 require_relative "../Constants/ResponseConstants"
 
 class CommandExecuteUtil
+  # Transforms the item to the response format
   def CommandExecuteUtil.itemToResponse(key, item)
     response = []
     if item
@@ -14,6 +15,7 @@ class CommandExecuteUtil
     response
   end
 
+  # Transforms the item to the response format of a gets
   def CommandExecuteUtil.itemToGetsResponse(key, item)
     response = []
     if item
@@ -24,6 +26,7 @@ class CommandExecuteUtil
     response
   end
 
+  # Transforms an error to the response format
   def CommandExecuteUtil.errorToResponse(status, error = nil)
     response = []
     response << (ResponseConstants::ERROR_TEMPLATE % [status, error]).strip
@@ -31,6 +34,7 @@ class CommandExecuteUtil
     response
   end
 
+  # executes the translated command
   def CommandExecuteUtil.execute(mapCommand, cache, value = nil)
     responseArray = Array.new
     commandResponse = nil

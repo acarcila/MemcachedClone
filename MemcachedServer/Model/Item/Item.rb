@@ -11,6 +11,7 @@ class Item
     @createdAt = Time.now.getutc
   end
 
+  # Concats a value to the end of the current value
   def append(value: nil, casToken: @casToken, ttl: nil, whitespace: 0, flags: 0)
     ttl ||= @ttl
     @whitespace += whitespace
@@ -20,6 +21,7 @@ class Item
     @value = "#{@value}#{value}"
   end
 
+  # Concats a value to the start of the current value
   def prepend(value: nil, casToken: @casToken, ttl: nil, whitespace: 0, flags: 0)
     ttl ||= @ttl
     @whitespace += whitespace
@@ -29,6 +31,7 @@ class Item
     @value = "#{value}#{@value}"
   end
 
+  # Returns the time at wich the item is suposed to expire
   def diesAt()
     @createdAt + @ttl
   end

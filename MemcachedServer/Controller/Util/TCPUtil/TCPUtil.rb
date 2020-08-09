@@ -8,6 +8,7 @@ require_relative "../CommandExecuteUtil/CommandExecuteUtil"
 require_relative "../../../Model/Cache/Cache"
 
 class TCPUtil
+  # Returns an available ipDirection and port selected in the command line
   def TCPUtil.getIPAndPort()
     ipDirection = ARGV[0]
     port = ARGV[1]
@@ -22,6 +23,7 @@ class TCPUtil
     return ipDirection, port
   end
 
+  # Checks if the given port of the given ipDirection is available
   def TCPUtil.checkPortAvailability(ipDirection, port)
     begin
       checkServer = TCPServer.new(ipDirection, port)
@@ -33,6 +35,7 @@ class TCPUtil
     return true
   end
 
+  # Receives and processes the commands given by the client
   def TCPUtil.processClientFile(client, cache)
     clientInput = client.gets
     clientInput = "" unless clientInput
@@ -58,7 +61,7 @@ class TCPUtil
     return false
   end
 
-  # creates a tcp Thread that
+  # creates a tcp Thread that listen to multiple clients
   def TCPUtil.createTCPThread(ipDirection, port, cache)
     server = TCPServer.new(ipDirection, port)
     puts ResponseConstants::SERVER_CONNECTED_TEMPLATE % [ipDirection, port]
