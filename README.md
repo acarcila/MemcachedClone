@@ -30,6 +30,22 @@ En este punto, se pueden utilizar los siguientes comandos:
 * get
 * gets
 * quit
+### Ejemplos
+```
+add ciudad 0 3600 4
+cali                          => Stored
+```
+```
+set barrio 0 3600 7
+napoles                       => Stored
+```
+```
+get ciudad barrio             => VALUE ciudad 0 4
+                                 cali
+                                 VALUE barrio 0 7
+                                 napoles
+                                 END
+```
 ## Correr los test de carga de JMeter
 Correr el server con la ip `127.0.0.1` y el puerto `3000`.\
 Abrir el archivo `TCPSampler.jmx` en `JMeterTestPlan` con *JMeter*, presionar **Arrancar** y esperar la duración del test: **2:15 min**.\
