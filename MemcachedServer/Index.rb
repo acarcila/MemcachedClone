@@ -11,7 +11,7 @@ $stdout.sync = true
 threads = []
 
 tcpThread = TCPUtil.createTCPThread(ipDirection, port, cache)
-cacheThread = CacheManagingUtil.createKeyManagingThread(cache)
+cacheThread = CacheManagingUtil.createKeyManagingThread(cache, 3600)
 
 threads = [tcpThread, cacheThread]
 

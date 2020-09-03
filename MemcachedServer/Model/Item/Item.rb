@@ -36,7 +36,12 @@ class Item
     @createdAt + @ttl
   end
 
+  # Returns if the key is currently available
+  def isAlive(currentTime: Time.now)
+    currentTime <= self.diesAt
+  end
+
   def to_s()
-    "value=#{@value}, ttl=#{ttl}, casToken=#{@casToken}, whitespace=#{@whitespace}, flags=#{@flags}, createdAt=#{@createdAt}"
+    "value=#{@value}, ttl=#{@ttl}, casToken=#{@casToken}, whitespace=#{@whitespace}, flags=#{@flags}, createdAt=#{@createdAt}"
   end
 end

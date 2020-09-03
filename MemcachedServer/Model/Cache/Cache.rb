@@ -12,7 +12,12 @@ class Cache
   # Gets the item with the specified key
   def get(key)
     if @memory[key]
-      @memory[key]
+      if @memory[key].isAlive(currentTime: Time.now)
+        @memory[key]
+      else
+        @memory.delete(key)
+        false
+      end
     else
       false
     end
@@ -82,7 +87,7 @@ class Cache
 
   # Delete the expired keys in the memory at a given time
   def deleteExpiredKeys(currentTime: Time.now)
-    memory.delete_if { |key, item| currentTime > item.diesAt }
+    memory.delete_if { |key, item| item.isAlive(currentTime) }
   end
 
   def to_s()
